@@ -36,3 +36,8 @@ a code pattern in which a class recieves the instances of objects it needs
 - are independent from any paticular component
 - provide shared data or logic across component
 - encapsulate external interactions
+
+constructor(private http: HttpClient)
+// assign the injected service instance to that variable
+
+// before we can inject a service in as a dependency, we need to register the provider with Angular's injector
