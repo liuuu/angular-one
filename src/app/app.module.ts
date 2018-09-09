@@ -5,9 +5,31 @@ import { AppComponent } from './app.component';
 import { ProductListComponent } from './product/product-list.component';
 import { StarComponent } from './star/star.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { RouterModule } from '@angular/router';
+import { ProductDetailGuard } from './product-detail/product-detail.guard';
+
 @NgModule({
-  declarations: [AppComponent, ProductListComponent, StarComponent],
-  imports: [BrowserModule, FormsModule, HttpClientModule],
+  declarations: [AppComponent, ProductListComponent, StarComponent, ProductDetailComponent],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    RouterModule.forRoot([
+      {
+        path: 'products',
+        component: ProductListComponent
+      },
+      {
+        path: 'products/:id',
+        canActivate: [ProductDetailGuard],
+        component: ProductDetailComponent
+      },
+      // { path: 'welcome', component: WelcomeComponent },
+      { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+      { path: '**', redirectTo: 'welcome', pathMatch: 'full' }
+    ])
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
