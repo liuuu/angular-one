@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { RouterModule } from '@angular/router';
 import { ProductDetailGuard } from './product-detail/product-detail.guard';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent, ProductListComponent, StarComponent, ProductDetailComponent],
@@ -15,6 +16,7 @@ import { ProductDetailGuard } from './product-detail/product-detail.guard';
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    SharedModule,
     RouterModule.forRoot([
       {
         path: 'products',
