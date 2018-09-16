@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angula
 import { IProduct } from './product';
 import { ProductService } from './product.service';
 import { NgModel } from '@angular/forms';
+import { CriteriaComponent } from '../shared/criteria/criteria.component';
 
 @Component({
   // selector: 'app-pm-products',
@@ -20,11 +21,14 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   products: IProduct[] = [];
   listFilter = '';
 
+  includeDetail = true;
+  parentListFilter: string;
+
+  @ViewChild(CriteriaComponent)
+  filterComponent: CriteriaComponent;
+
   @ViewChild('FilterInput')
   filterElementRef: ElementRef;
-
-  @ViewChild(NgModel)
-  filterInput: NgModel;
 
   constructor(private productService: ProductService) {
     // this._listFilter = '';
@@ -42,7 +46,11 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   // }
 
   performFilter(filterBy: string) {
-    return this.products.filter((p: IProduct) => p.productName.indexOf(filterBy) !== -1);
+    if (filterBy) {
+      this.filterdProducts = this.products.filter((p: IProduct) => p.productName.indexOf(filterBy) !== -1);
+    } else {
+      this.filterdProducts = this.products;
+    }
   }
 
   toggleImage(): void {
@@ -59,16 +67,24 @@ export class ProductListComponent implements OnInit, AfterViewInit {
       products => {
         console.log('products', products);
         this.products = products;
-        this.filterdProducts = this.products;
+        console.log('this.parentListFIlter', this.parentListFilter);
+        // this.filterdProducts = this.performFilter(this.parentListFilter);
+        // console.log('this.parentListFilter', this.parentListFilter);
+        this.performFilter(this.parentListFilter);
       },
       error => (this.errorMsg = <any>error)
     );
   }
 
   ngAfterViewInit() {
-    this.filterInput.valueChanges.subscribe(value => {
-      this.filterdProducts = this.performFilter(value);
-    });
+    // this.filterInput.valueChanges.subscribe(value => {
+    //   this.filterdProducts = this.performFilter(value);
+    // });
     this.filterElementRef.nativeElement.focus();
+    this.parentListFilter = this.filterComponent.listFilter;
+  }
+
+  onValueChange(value: string) {
+    this.performFilter(value);
   }
 }
