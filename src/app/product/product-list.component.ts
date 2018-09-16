@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { IProduct } from './product';
 import { ProductService } from './product.service';
+import { NgModel } from '@angular/forms';
 
 @Component({
   // selector: 'app-pm-products',
@@ -17,24 +18,28 @@ export class ProductListComponent implements OnInit, AfterViewInit {
 
   filteredProducts: IProduct[] = [];
   products: IProduct[] = [];
+  listFilter = '';
 
   @ViewChild('FilterInput')
   filterElementRef: ElementRef;
 
+  @ViewChild(NgModel)
+  filterInput: NgModel;
+
   constructor(private productService: ProductService) {
-    this._listFilter = '';
+    // this._listFilter = '';
   }
 
-  _listFilter: string;
-  get listFilter(): string {
-    return this._listFilter;
-  }
+  // _listFilter: string;
+  // get listFilter(): string {
+  //   return this._listFilter;
+  // }
 
-  set listFilter(value: string) {
-    this._listFilter = value;
-    this.filterdProducts = this.listFilter ? this.performFilter(this.listFilter) : this.products;
-    console.log('this.filterdProducts', this.filterdProducts);
-  }
+  // set listFilter(value: string) {
+  //   this._listFilter = value;
+  //   this.filterdProducts = this.listFilter ? this.performFilter(this.listFilter) : this.products;
+  //   console.log('this.filterdProducts', this.filterdProducts);
+  // }
 
   performFilter(filterBy: string) {
     return this.products.filter((p: IProduct) => p.productName.indexOf(filterBy) !== -1);
@@ -61,7 +66,9 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // console.log('filterElementRef', this.filterElementRef);
+    this.filterInput.valueChanges.subscribe(value => {
+      this.filterdProducts = this.performFilter(value);
+    });
     this.filterElementRef.nativeElement.focus();
   }
 }
